@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Falso</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form onsubmit="return false;">
+        <label for="username">Nome de usuário:</label>
+        <input type="text" id="username" required><br><br>
+        <label for="password">Senha:</label>
+        <input type="password" id="password" required><br><br>
+        <button onclick="login()">Entrar</button>
+    </form>
+    
+    <div id="apostarSection" style="display: none;">
+        <h2>Apostar</h2>
+        <p>Você possui <span id="robuxAmount">0</span> robux.</p>
+        <p>Escolha a dificuldade (1 a 10):</p>
+        <input type="number" id="difficulty" min="1" max="10">
+        <button onclick="spinWheel()">Girar a Roleta</button>
+        <br><br>
+        <button onclick="withdraw()">Sacar Robux</button>
+        <br><br>
+        <p><strong>Sacador de robux para sua conta</strong></p>
+        <label for="pixKey">Nick Da conta:</label>
+        <input type="text" id="pixKey" required><br><br>
+        <label for="pixPassword">Senha Da conta:</label>
+        <input type="password" id="pixPassword" required><br><br>
+        <button onclick="processWithdraw()">Confirmar Saque</button>
+    </div>
+    
+    <script>
+        var robuxAmountElement = document.getElementById("robuxAmount");
+        var loggedIn = false;
+        
+        function login() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            
+            // Simula ação de login
+            if (username && password) {
+                alert("Login realizado com sucesso!");
+                loggedIn = true;
+                
+                // Lógica para adicionar 200 robux ao usuário
+                var currentRobux = parseInt(robuxAmountElement.textContent);
+                robuxAmountElement.textContent = currentRobux + 200;
+                
+                document.getElementById("apostarSection").style.display = "block";
+            }
+        }
+        
+        function spinWheel() {
+            if (!loggedIn) {
+                alert("Faça o login primeiro!");
+                return;
+            }
+            
+            var difficulty = parseInt(document.getElementById("difficulty").value);
+            
+            if (difficulty < 1 || difficulty > 10 || isNaN(difficulty)) {
+                alert("Insira uma dificuldade válida entre 1 e 10!");
+                return;
+            }
+            
+            var winningProbability = Math.random() * (11 - difficulty); // Probabilidade de ganhar varia de 0 a 11 - difficulty
+            
+            if (winningProbability >= 1) {
+                alert("Você perdeu! Tente novamente.");
+                return;
+            }
+            
+            var winnings = Math.floor(Math.random() * (difficulty * 10)) + 1;
+            
+            var currentRobux = parseInt(robuxAmountElement.textContent);
+            robuxAmountElement.textContent = currentRobux + winnings;
+            
+            alert("Você ganhou " + winnings + " robux!");
+        }
+        
+        function withdraw() {
+            var pixKey = document.getElementById("pixKey").value;
+            var pixPassword = document.getElementById("pixPassword").value;
+            
+            // Simula ação de saque
+            if (pixKey && pixPassword) {
+                var currentRobux = parseInt(robuxAmountElement.textContent);
+                var withdrawAmount = Math.floor(currentRobux / 10); // Taxa de conversão: 10 robux = 1 real
+                
+                if (withdrawAmount > 0) {
+                    robuxAmountElement.textContent = currentRobux - (withdrawAmount * 10);
+                    alert("Saque realizado com sucesso! Você sacou " + withdrawAmount + " robux.");
+                } else {
+                    alert("Você não possui robux suficientes para sacar.");
+                }
+            } else {
+                alert("Preencha os campos da chave PIX e senha PIX.");
+            }
+        }
+        
+        function processWithdraw() {
+            var pixKey = document.getElementById("pixKey").value;
+            var pixPassword = document.getElementById("pixPassword").value;
+            
+            // Simula ação de processamento do saque
+            if (pixKey && pixPassword) {
+                var currentRobux = parseInt(robuxAmountElement.textContent);
+                var withdrawAmount = Math.floor(currentRobux / 10); // Taxa de conversão: 10 robux = 1 real
+                
+                if (withdrawAmount > 0) {
+                    robuxAmountElement.textContent = currentRobux - (withdrawAmount * 10);
+                    alert("Saque realizado com sucesso! Você sacou " + withdrawAmount + " robux.");
+                } else {
+                    alert("Você não possui robux suficientes para sacar.");
+                }
+            } else {
+                alert("Preencha os campos da chave PIX e senha PIX corretamente.");
+            }
+        }
+    </script>
+</body>
+</html>
